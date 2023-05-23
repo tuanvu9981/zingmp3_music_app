@@ -13,11 +13,6 @@ final discoverList = <BannerModel>[
     type: 'playlist',
   ),
   BannerModel(
-    title: 'Nhạc chill',
-    imgUrl: 'assets/images/chill_music.jpg',
-    type: 'playlist',
-  ),
-  BannerModel(
     title: 'Âm nhạc vùng Tây Bắc',
     imgUrl: 'assets/images/tay_bac.jpg',
     type: 'playlist',
@@ -33,6 +28,11 @@ final discoverList = <BannerModel>[
     type: 'playlist',
   ),
   BannerModel(
+    title: 'Nhạc chill',
+    imgUrl: 'assets/images/chill_music.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
     title: 'Những bài hát hay nhất của Bích Phương',
     imgUrl: 'assets/images/bichphuong.jpeg',
     type: 'singer',
@@ -40,6 +40,39 @@ final discoverList = <BannerModel>[
   BannerModel(
     title: 'Những bài hát hay nhất của Justatee',
     imgUrl: 'assets/images/justatee.jpeg',
+    type: 'singer',
+  ),
+  BannerModel(
+    title: '',
+    imgUrl: '',
+    type: 'all',
+  ),
+];
+
+final latestListenSongs = <BannerModel>[
+  BannerModel(
+    title: 'Những bài hát hay nhất của Thùy Chi',
+    imgUrl: 'assets/images/songs/thanh_thi.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Kpop new hits 2023',
+    imgUrl: 'assets/images/bts_kpop.jpeg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Nhạc chill',
+    imgUrl: 'assets/images/chill_music.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Best hit maker ever - Avichi',
+    imgUrl: 'assets/images/songs/the-night-avichi.jpeg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Những bài hát hay nhất của Bích Phương',
+    imgUrl: 'assets/images/bichphuong.jpeg',
     type: 'singer',
   ),
   BannerModel(

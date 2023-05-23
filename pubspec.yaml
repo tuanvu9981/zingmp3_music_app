@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -22,6 +23,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/songs/
     - assets/audios/
 
   # An image asset can refer to one or more resolution-specific "variants", see
