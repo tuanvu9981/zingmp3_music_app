@@ -31,7 +31,6 @@ class HomeState extends State<Home> {
   Widget buildNotice(double scrH, double scrW) {
     return Container(
       width: scrW,
-      height: scrH * 0.25,
       child: Column(
         children: [
           BigText(
@@ -41,16 +40,16 @@ class HomeState extends State<Home> {
             func: () {},
           ),
           Container(
-            height: scrH * 0.2,
+            height: scrH * 0.24,
             child: ListView.builder(
               padding: const EdgeInsets.all(5.0),
               scrollDirection: Axis.horizontal,
-              itemCount: discoverList.length,
+              itemCount: noticeList.length,
               itemBuilder: (context, index) {
-                BannerModel b = discoverList[index];
+                BannerModel b = noticeList[index];
                 return BannerCard(
-                  bHeight: 120.0,
-                  bWidth: 120.0,
+                  bHeight: 145.0,
+                  bWidth: 145.0,
                   banner: b,
                   fontSize: 12.5,
                 );
@@ -116,20 +115,18 @@ class HomeState extends State<Home> {
             ],
           ),
           Container(
-            height: scrH * 0.375,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(5.0),
+            height: scrH * 0.36,
+            child: CarouselSlider.builder(
               itemCount: (typedSongs.length / 4).round(),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: ((context, index) {
+              itemBuilder: ((context, index, realId) {
                 var data = <Song>[];
                 if (index * 4 + 4 <= typedSongs.length) {
                   for (var i = index * 4; i < index * 4 + 4; i++) {
                     data.add(typedSongs[i]);
                   }
                   return Container(
-                    height: scrH * 0.375,
-                    width: scrW * 0.85,
+                    height: scrH * 0.36,
+                    width: scrW * 0.92,
                     child: Column(children: buildSongCard(data)),
                   );
                 } else {
@@ -137,37 +134,54 @@ class HomeState extends State<Home> {
                     data.add(typedSongs[i]);
                   }
                   return Container(
-                    height: scrH * 0.375,
-                    width: scrW * 0.85,
+                    height: scrH * 0.36,
+                    width: scrW * 0.92,
                     child: Column(children: buildSongCard(data)),
                   );
                 }
               }),
+              options: CarouselOptions(
+                aspectRatio: 1.2,
+                enlargeCenterPage: true,
+                autoPlay: false,
+                viewportFraction: 1.5,
+                enableInfiniteScroll: false,
+              ),
             ),
           ),
-          // child: ListView(
-          //   children: [
-          //     ...typedSongs
-          //         .map(
-          //           (e) => ListTile(
-          //             leading: Image.asset(
-          //               e.imgUrl!,
-          //               height: 50.0,
-          //               width: 50.0,
-          //               fit: BoxFit.cover,
-          //             ),
-          //             title: Text(e.songName!),
-          //             subtitle: Text(e.singerName!),
-          //             trailing: GestureDetector(
-          //               onTap: () {},
-          //               child: Icon(Icons.more_vert_outlined),
-          //             ),
-          //           ),
-          //         )
-          //         .toList()
-          //   ],
-          // ),
-          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildPopular(double scrH, double scrW) {
+    return Container(
+      width: scrW,
+      child: Column(
+        children: [
+          BigText(
+            bigTxtStyle: bigTxtStyle,
+            screenWidth: scrW,
+            title: "Thịnh hành",
+            func: () {},
+          ),
+          Container(
+            height: scrH * 0.25,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(5.0),
+              scrollDirection: Axis.horizontal,
+              itemCount: popularSongs.length,
+              itemBuilder: (context, index) {
+                BannerModel b = popularSongs[index];
+                return BannerCard(
+                  bHeight: 145.0,
+                  bWidth: 145.0,
+                  banner: b,
+                  fontSize: 12.5,
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -185,7 +199,7 @@ class HomeState extends State<Home> {
             func: () {},
           ),
           Container(
-            height: scrH * 0.2,
+            height: scrH * 0.24,
             child: ListView.builder(
               padding: const EdgeInsets.all(5.0),
               scrollDirection: Axis.horizontal,
@@ -193,8 +207,8 @@ class HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 BannerModel b = discoverList[index];
                 return BannerCard(
-                  bHeight: 120.0,
-                  bWidth: 120.0,
+                  bHeight: 145.0,
+                  bWidth: 145.0,
                   banner: b,
                   fontSize: 12.5,
                 );
@@ -210,7 +224,6 @@ class HomeState extends State<Home> {
     return Container(
       padding: const EdgeInsets.only(top: 10.0),
       width: scrW,
-      height: scrH * 0.23,
       child: Column(
         children: [
           BigText(
@@ -220,7 +233,7 @@ class HomeState extends State<Home> {
             func: () {},
           ),
           Container(
-            height: scrH * 0.18,
+            height: scrH * 0.2,
             child: ListView.builder(
               padding: const EdgeInsets.all(5.0),
               scrollDirection: Axis.horizontal,
@@ -228,8 +241,8 @@ class HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 BannerModel bn = latestListenSongs[index];
                 return BannerCard(
-                  bHeight: 100.0,
-                  bWidth: 100.0,
+                  bHeight: 115.0,
+                  bWidth: 115.0,
                   banner: bn,
                   fontSize: 11.25,
                 );
@@ -238,6 +251,42 @@ class HomeState extends State<Home> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildChart(double h, double w) {
+    return Container(
+      margin: const EdgeInsets.all(12.5),
+      decoration: BoxDecoration(
+        color: Colors.purple[900],
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: w * 0.9,
+      height: h * 0.65,
+    );
+  }
+
+  Widget buildTopImage(double h, double w) {
+    return Container(
+      margin: const EdgeInsets.all(12.5),
+      decoration: BoxDecoration(
+        color: Colors.lightGreen,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: w * 0.9,
+      height: h * 0.24,
+    );
+  }
+
+  Widget buildTopIcons(double h, double w) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.5),
+      decoration: BoxDecoration(
+        color: Colors.amber[300],
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: w * 0.9,
+      height: h * 0.1,
     );
   }
 
@@ -250,10 +299,14 @@ class HomeState extends State<Home> {
       body: SafeArea(
         child: ListView(
           children: [
+            buildTopImage(screenHeight, screenWidth),
+            buildTopIcons(screenHeight, screenWidth),
             buildLatestListen(screenHeight, screenWidth),
             buildDiscovery(screenHeight, screenWidth),
             buildNewRelease(context, screenHeight, screenWidth),
             buildNotice(screenHeight, screenWidth),
+            buildChart(screenHeight, screenWidth),
+            buildPopular(screenHeight, screenWidth),
           ],
         ),
       ),

@@ -81,3 +81,79 @@ final latestListenSongs = <BannerModel>[
     type: 'all',
   ),
 ];
+
+var noticeList = <BannerModel>[
+  BannerModel(
+    title: 'Top Rap 2023',
+    imgUrl: 'assets/images/songs/denvau_loinho.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Nhạc Việt mang âm hưởng sôi động cho ngày mới',
+    imgUrl: 'assets/images/songs/kia_bong_dang_ai.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Kpop new hits 2023',
+    imgUrl: 'assets/images/bts_kpop.jpeg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Nhạc Nhật chill tháng 6',
+    imgUrl: 'assets/images/songs/tabun_yoasobi.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Nhạc chill',
+    imgUrl: 'assets/images/chill_music.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'OST trong các bộ anime nổi tiếng ',
+    imgUrl: 'assets/images/songs/yoruni_kakeru.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Những bài hát hay nhất của Thùy Chi',
+    imgUrl: 'assets/images/songs/thanh_thi.jpg',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Những bài hát hay nhất của HIEUTHUHAI',
+    imgUrl: 'assets/images/songs/hieuthu2.jpg',
+    type: 'singer',
+  ),
+  BannerModel(
+    title: '',
+    imgUrl: '',
+    type: 'all',
+  ),
+];
+
+var popularSongs = <BannerModel>[
+  BannerModel(
+    title: 'Những bài hát hay nhất của Bảo Anh',
+    imgUrl: 'assets/images/pop_baoanh.png',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Những bài hát hay nhất của HIEUTHUHAI',
+    imgUrl: 'assets/images/pop_hieuthu2.png',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Những bài hát hay nhất của Hứa Kim Tuyền',
+    imgUrl: 'assets/images/pop_huakimtuyen.png',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Những bài hát hay nhất của Phan Mạnh Quỳnh',
+    imgUrl: 'assets/images/pop_phanmanhquynh.png',
+    type: 'playlist',
+  ),
+  BannerModel(
+    title: 'Những bài hát hay nhất của Văn Mai Hương',
+    imgUrl: 'assets/images/pop_vanmaihuong.png',
+    type: 'playlist',
+  ),
+];

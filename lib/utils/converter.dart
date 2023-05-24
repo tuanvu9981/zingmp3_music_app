@@ -17,8 +17,8 @@ List<Widget> buildSongCard(List<Song> songs) {
       .map((e) => ListTile(
             leading: Image.asset(
               e.imgUrl!,
-              height: 50.0,
-              width: 50.0,
+              height: 60.0,
+              width: 60.0,
               fit: BoxFit.cover,
             ),
             title: Text(e.songName!),

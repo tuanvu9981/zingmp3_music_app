@@ -26,6 +26,18 @@ var listOfSong = <Song>[
     type: 'international',
   ),
   Song(
+    imgUrl: 'assets/images/songs/tabun_yoasobi.jpg',
+    singerName: 'Yoasobi',
+    songName: 'Tabun',
+    type: 'international',
+  ),
+  Song(
+    imgUrl: 'assets/images/songs/yoruni_kakeru.jpg',
+    singerName: 'Yoasobi',
+    songName: 'Yoruni kakeru',
+    type: 'international',
+  ),
+  Song(
     imgUrl: 'assets/images/songs/ben_tren_tang_lau.jpeg',
     singerName: 'Tăng Duy Tân',
     songName: 'Bên trên tầng lầu',
