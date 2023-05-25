@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // app models
 import 'package:music_app/model/banner.model.dart';
 import 'package:music_app/model/song.model.dart';
+import 'package:music_app/model/topicon.model.dart';
 
 // customed widgets
 import 'package:music_app/widgets/banner.card.dart';
@@ -25,8 +26,14 @@ class HomeState extends State<Home> {
     fontWeight: FontWeight.bold,
     fontSize: 20.0,
   );
+  final tabTitleStyle = const TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 25.0,
+    color: Colors.black,
+  );
   String? releaseType = 'all';
   final tags = <String>["Tất cả", "Việt Nam", "Quốc tế"];
+  int _currentTab = 1;
 
   Widget buildNotice(double scrH, double scrW) {
     return Container(
@@ -240,8 +247,8 @@ class HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 BannerModel bn = latestListenSongs[index];
                 return BannerCard(
-                  bHeight: 115.0,
-                  bWidth: 115.0,
+                  bHeight: 100.0,
+                  bWidth: 100.0,
                   banner: bn,
                   fontSize: 11.25,
                 );
@@ -267,9 +274,9 @@ class HomeState extends State<Home> {
 
   Widget buildTopImage(BuildContext context, double h, double w) {
     return Container(
-      margin: const EdgeInsets.all(12.5),
+      margin: const EdgeInsets.symmetric(horizontal: 12.5, vertical: 10.0),
       width: w * 0.9,
-      height: h * 0.24,
+      height: h * 0.25,
       child: CarouselSlider.builder(
         itemCount: imgSongs.length,
         itemBuilder: ((context, index, realIndex) {
@@ -282,7 +289,7 @@ class HomeState extends State<Home> {
                   imgUrl,
                   fit: BoxFit.cover,
                   width: w * 0.9,
-                  height: h * 0.24,
+                  height: h * 0.25,
                 ),
               ),
               Positioned(
@@ -307,12 +314,12 @@ class HomeState extends State<Home> {
   Widget buildTopIcons(double h, double w) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.5),
-      decoration: BoxDecoration(
-        color: Colors.amber[300],
-        borderRadius: BorderRadius.circular(10.0),
-      ),
       width: w * 0.9,
       height: h * 0.1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: buildTopIconsRow(topIcons),
+      ),
     );
   }
 
@@ -321,20 +328,57 @@ class HomeState extends State<Home> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      // appBar: AppBar(backgroundColor: Colors.white),
-      body: SafeArea(
-        child: ListView(
-          children: [
-            buildTopImage(context, screenHeight, screenWidth),
-            buildTopIcons(screenHeight, screenWidth),
-            buildLatestListen(screenHeight, screenWidth),
-            buildDiscovery(screenHeight, screenWidth),
-            buildNewRelease(context, screenHeight, screenWidth),
-            buildNotice(screenHeight, screenWidth),
-            buildChart(screenHeight, screenWidth),
-            buildPopular(screenHeight, screenWidth),
-          ],
-        ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            title: Text("Khám phá", style: tabTitleStyle),
+            elevation: 0,
+            backgroundColor: Colors.white,
+            expandedHeight: screenHeight * 0.05,
+            actions: const [
+              Padding(
+                padding: EdgeInsets.all(5.0),
+                child: Icon(Icons.mic, color: Colors.black, size: 25.0),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                child: Icon(Icons.search, color: Colors.black, size: 25.0),
+              )
+            ],
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              buildTopImage(context, screenHeight, screenWidth),
+              buildTopIcons(screenHeight, screenWidth),
+              buildLatestListen(screenHeight, screenWidth),
+              buildDiscovery(screenHeight, screenWidth),
+              buildNewRelease(context, screenHeight, screenWidth),
+              buildNotice(screenHeight, screenWidth),
+              buildChart(screenHeight, screenWidth),
+              buildPopular(screenHeight, screenWidth),
+            ]),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).highlightColor,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        currentIndex: _currentTab,
+        onTap: (int value) {
+          setState(() {
+            _currentTab = value;
+          });
+        },
+        items: btmIcons
+            .map(
+              (e) => BottomNavigationBarItem(
+                icon: Icon(e.iconData),
+                label: e.title,
+              ),
+            )
+            .toList(),
       ),
     );
   }
