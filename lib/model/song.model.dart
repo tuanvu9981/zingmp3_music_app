@@ -98,3 +98,11 @@ var listOfSong = <Song>[
     type: 'vietnam',
   ),
 ];
+
+var imgSongs = <String>[
+  'assets/images/songs/topImg1.jpg',
+  'assets/images/songs/topImg2.jpg',
+  'assets/images/songs/topImg3.jpg',
+  'assets/images/songs/topImg4.jpg',
+  'assets/images/songs/topImg5.jpg',
+];

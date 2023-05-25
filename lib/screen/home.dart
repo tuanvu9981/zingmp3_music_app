@@ -142,7 +142,6 @@ class HomeState extends State<Home> {
               }),
               options: CarouselOptions(
                 aspectRatio: 1.2,
-                enlargeCenterPage: true,
                 autoPlay: false,
                 viewportFraction: 1.5,
                 enableInfiniteScroll: false,
@@ -266,15 +265,42 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget buildTopImage(double h, double w) {
+  Widget buildTopImage(BuildContext context, double h, double w) {
     return Container(
       margin: const EdgeInsets.all(12.5),
-      decoration: BoxDecoration(
-        color: Colors.lightGreen,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
       width: w * 0.9,
       height: h * 0.24,
+      child: CarouselSlider.builder(
+        itemCount: imgSongs.length,
+        itemBuilder: ((context, index, realIndex) {
+          var imgUrl = imgSongs[index];
+          return Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image.asset(
+                  imgUrl,
+                  fit: BoxFit.cover,
+                  width: w * 0.9,
+                  height: h * 0.24,
+                ),
+              ),
+              Positioned(
+                right: 10.0,
+                top: 10.0,
+                child: Row(children: buildDots(index, imgSongs.length)),
+              ),
+            ],
+          );
+        }),
+        options: CarouselOptions(
+          aspectRatio: 1,
+          enlargeCenterPage: false,
+          autoPlay: true,
+          viewportFraction: 1,
+          enableInfiniteScroll: true,
+        ),
+      ),
     );
   }
 
@@ -295,11 +321,11 @@ class HomeState extends State<Home> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(backgroundColor: Theme.of(context).highlightColor),
+      // appBar: AppBar(backgroundColor: Colors.white),
       body: SafeArea(
         child: ListView(
           children: [
-            buildTopImage(screenHeight, screenWidth),
+            buildTopImage(context, screenHeight, screenWidth),
             buildTopIcons(screenHeight, screenWidth),
             buildLatestListen(screenHeight, screenWidth),
             buildDiscovery(screenHeight, screenWidth),

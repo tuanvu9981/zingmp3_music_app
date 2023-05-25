@@ -30,3 +30,16 @@ List<Widget> buildSongCard(List<Song> songs) {
           ))
       .toList();
 }
+
+List<Widget> buildDots(int index, int length) {
+  List<Widget> icons = [];
+  for (var i = 0; i < length; i++) {
+    icons.add(Icon(
+      Icons.circle,
+      size: 10.0,
+      color: i == index ? Colors.white : Colors.grey,
+    ));
+    icons.add(const SizedBox(width: 2.0));
+  }
+  return icons;
+}
