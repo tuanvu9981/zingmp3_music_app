@@ -12,7 +12,7 @@ class MusicApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Zing Mp3 Fake',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         highlightColor: const Color.fromARGB(255, 105, 27, 119),

@@ -6,6 +6,8 @@ class Song {
   String? imgUrl;
   String? type;
   int? listenTimes;
+  int? id;
+  int? rankId;
 
   Song({
     this.singerName,
@@ -13,6 +15,8 @@ class Song {
     this.imgUrl,
     this.type,
     this.listenTimes,
+    this.id,
+    this.rankId,
   });
 }
 
@@ -113,57 +117,88 @@ var imgSongs = <String>[
 
 var top5Song = <Song>[
   Song(
-    imgUrl: 'assets/images/songs/ben_tren_tang_lau.jpeg',
-    singerName: 'Tăng Duy Tân',
-    songName: 'Bên trên tầng lầu',
-    listenTimes: 18273,
-  ),
-  Song(
+    id: 0,
     imgUrl: 'assets/images/songs/denvau.jpg',
     singerName: 'Đen Vâu',
     songName: 'Nấu cơm cho em',
     listenTimes: 20184,
+    rankId: 0,
   ),
   Song(
-    imgUrl: 'assets/images/songs/dong_thoi_gian.jpg',
-    singerName: 'Nguyễn Hải Phong',
-    songName: 'Dòng thời gian',
-    listenTimes: 10838,
+    id: 1,
+    imgUrl: 'assets/images/songs/ben_tren_tang_lau.jpeg',
+    singerName: 'Tăng Duy Tân',
+    songName: 'Bên trên tầng lầu',
+    listenTimes: 18273,
+    rankId: 1,
   ),
   Song(
+    id: 2,
     imgUrl: 'assets/images/songs/she_neva_know.jpg',
     singerName: 'Justatee',
     songName: 'She Neva Know',
     listenTimes: 15002,
+    rankId: 2,
   ),
   Song(
+    id: 3,
+    imgUrl: 'assets/images/songs/dong_thoi_gian.jpg',
+    singerName: 'Nguyễn Hải Phong',
+    songName: 'Dòng thời gian',
+    listenTimes: 10838,
+    rankId: 3,
+  ),
+  Song(
+    id: 4,
     imgUrl: 'assets/images/tay_bac.jpg',
     singerName: 'Đoàn Thúy Trang',
     songName: 'Tình yêu màu nắng',
     listenTimes: 11052,
+    rankId: 4,
   ),
 ];
 
-List<Widget> buildTop5Song(List<Song> songs) {
+Color? selectColor(int rankId) {
+  if (rankId == 1) {
+    return Colors.lightBlue;
+  } else if (rankId == 0) {
+    return Colors.lightGreen;
+  } else if (rankId == 2) {
+    return Colors.red;
+  } else {
+    return Colors.white54;
+  }
+}
+
+List<Widget> buildTop5Song(List<Song> songs, int currentIndex) {
   // var sortedSongs = ... sort with listenTimes
 
   return songs
-      .map((e) => ListTile(
-            textColor: Colors.white70,
+      .map(
+        (e) => SizedBox(
+          height: 55.0,
+          child: ListTile(
+            textColor: Colors.white54,
             selectedColor: Colors.white,
-            selected: e.songName == 'Tình yêu màu nắng' ? true : false,
+            selected: e.rankId == currentIndex,
             leading: Container(
-              width: 80.0,
+              width: 70.0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("1", style: TextStyle(fontSize: 20.0)),
+                  Text(
+                    "${e.rankId! + 1}",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: selectColor(e.rankId!),
+                    ),
+                  ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image.asset(
                       e.imgUrl!,
-                      height: 50.0,
-                      width: 50.0,
+                      height: 40.0,
+                      width: 40.0,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -174,8 +209,10 @@ List<Widget> buildTop5Song(List<Song> songs) {
             subtitle: Text(e.singerName!),
             trailing: GestureDetector(
               onTap: () {},
-              child: Icon(Icons.more_vert_outlined, color: Colors.white70),
+              child: Icon(Icons.more_vert_outlined, color: Colors.white54),
             ),
-          ))
+          ),
+        ),
+      )
       .toList();
 }
