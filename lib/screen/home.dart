@@ -264,11 +264,34 @@ class HomeState extends State<Home> {
     return Container(
       margin: const EdgeInsets.all(12.5),
       decoration: BoxDecoration(
-        color: Colors.purple[900],
+        color: const Color.fromARGB(255, 61, 27, 102),
         borderRadius: BorderRadius.circular(10.0),
       ),
       width: w * 0.9,
-      height: h * 0.65,
+      height: h * 0.75,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          ...buildTop5Song(top5Song),
+          Center(
+            child: Container(
+              width: w * 0.2,
+              height: h * 0.025,
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(width: 0.25, color: Colors.grey),
+              ),
+              child: const Center(
+                child: Text(
+                  "XEM THÊM",
+                  style: TextStyle(color: Colors.white, fontSize: 12.5),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
