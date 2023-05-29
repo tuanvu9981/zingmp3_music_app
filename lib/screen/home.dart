@@ -12,6 +12,7 @@ import 'package:music_app/model/graph.model.dart';
 // customed widgets
 import 'package:music_app/widgets/banner.card.dart';
 import 'package:music_app/widgets/bigtext.dart';
+import 'package:music_app/widgets/chart.scroll.dart';
 
 // utils
 import 'package:music_app/utils/converter.dart';
@@ -266,29 +267,33 @@ class HomeState extends State<Home> {
     );
   }
 
+  Future<void> activateChart() async {
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      switch (_currentIndexSong) {
+        case 0:
+          setState(() {
+            _currentIndexSong += 1;
+          });
+          break;
+        case 1:
+          setState(() {
+            _currentIndexSong += 1;
+          });
+          break;
+        case 2:
+          setState(() {
+            _currentIndexSong = 0;
+          });
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
   Widget buildChart(double h, double w) {
     final now = DateTime.now();
-    // Timer.periodic(const Duration(seconds: 5), (timer) {
-    //   switch (_currentIndexSong) {
-    //     case 0:
-    //       setState(() {
-    //         _currentIndexSong += 1;
-    //       });
-    //       break;
-    //     case 1:
-    //       setState(() {
-    //         _currentIndexSong += 1;
-    //       });
-    //       break;
-    //     case 2:
-    //       setState(() {
-    //         _currentIndexSong = 0;
-    //       });
-    //       break;
-    //     default:
-    //       break;
-    //   }
-    // });
+
     return Container(
       margin: const EdgeInsets.all(12.5),
       decoration: BoxDecoration(
@@ -370,7 +375,7 @@ class HomeState extends State<Home> {
               series: getSongSeries(_currentIndexSong),
             ),
           ),
-          ...buildTop5Song(top5Song, _currentIndexSong),
+          ...buildTopSong(top5Song, _currentIndexSong),
           Center(
             child: Container(
               width: w * 0.2,
@@ -380,10 +385,17 @@ class HomeState extends State<Home> {
                 borderRadius: BorderRadius.circular(10.0),
                 border: Border.all(width: 0.25, color: Colors.grey),
               ),
-              child: const Center(
-                child: Text(
-                  "XEM THÊM",
-                  style: TextStyle(color: Colors.white70, fontSize: 11.5),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _currentTab = 2;
+                    });
+                  },
+                  child: const Text(
+                    "XEM THÊM",
+                    style: TextStyle(color: Colors.white70, fontSize: 11.5),
+                  ),
                 ),
               ),
             ),
@@ -484,40 +496,7 @@ class HomeState extends State<Home> {
                 ),
               ],
             )
-          : CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  floating: true,
-                  title: Text("Khám phá", style: tabTitleStyle),
-                  elevation: 0,
-                  backgroundColor: Colors.white,
-                  expandedHeight: screenHeight * 0.05,
-                  actions: const [
-                    Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Icon(Icons.mic, color: Colors.black, size: 25.0),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.0),
-                      child:
-                          Icon(Icons.search, color: Colors.black, size: 25.0),
-                    )
-                  ],
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    buildTopImage(context, screenHeight, screenWidth),
-                    buildTopIcons(screenHeight, screenWidth),
-                    buildLatestListen(screenHeight, screenWidth),
-                    buildDiscovery(screenHeight, screenWidth),
-                    buildNewRelease(context, screenHeight, screenWidth),
-                    buildNotice(screenHeight, screenWidth),
-                    buildChart(screenHeight, screenWidth),
-                    buildPopular(screenHeight, screenWidth),
-                  ]),
-                ),
-              ],
-            ),
+          : const ChartScroll(),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Theme.of(context).highlightColor,
         unselectedItemColor: Colors.grey,
