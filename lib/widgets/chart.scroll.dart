@@ -59,7 +59,7 @@ class ChartScrollState extends State<ChartScroll> {
                   )
                 : const SizedBox(height: 25.0),
             Container(
-              padding: EdgeInsets.only(top: _all == false ? 0 : 17.5),
+              padding: const EdgeInsets.symmetric(vertical: 12.5),
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 55, 49, 78),
                 borderRadius: BorderRadius.circular(20.0),

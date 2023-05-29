@@ -1,6 +1,7 @@
 // core lib
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:miniplayer/miniplayer.dart';
 import 'dart:async';
 
 // app models
@@ -8,6 +9,7 @@ import 'package:music_app/model/banner.model.dart';
 import 'package:music_app/model/song.model.dart';
 import 'package:music_app/model/topicon.model.dart';
 import 'package:music_app/model/graph.model.dart';
+import 'package:music_app/screen/listen.song.dart';
 
 // customed widgets
 import 'package:music_app/widgets/banner.card.dart';
@@ -461,42 +463,123 @@ class HomeState extends State<Home> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: _currentTab == 1
-          ? CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  floating: true,
-                  title: Text("Khám phá", style: tabTitleStyle),
-                  elevation: 0,
-                  backgroundColor: Colors.white,
-                  expandedHeight: screenHeight * 0.05,
-                  actions: const [
-                    Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Icon(Icons.mic, color: Colors.black, size: 25.0),
+      body: Stack(
+        children: [
+          _currentTab == 1
+              ? CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      floating: true,
+                      title: Text("Khám phá", style: tabTitleStyle),
+                      elevation: 0,
+                      backgroundColor: Colors.white,
+                      expandedHeight: screenHeight * 0.05,
+                      actions: const [
+                        Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child:
+                              Icon(Icons.mic, color: Colors.black, size: 25.0),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Icon(Icons.search,
+                              color: Colors.black, size: 25.0),
+                        )
+                      ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.0),
-                      child:
-                          Icon(Icons.search, color: Colors.black, size: 25.0),
-                    )
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        buildTopImage(context, screenHeight, screenWidth),
+                        buildTopIcons(screenHeight, screenWidth),
+                        buildLatestListen(screenHeight, screenWidth),
+                        buildDiscovery(screenHeight, screenWidth),
+                        buildNewRelease(context, screenHeight, screenWidth),
+                        buildNotice(screenHeight, screenWidth),
+                        buildChart(screenHeight, screenWidth),
+                        buildPopular(screenHeight, screenWidth),
+                      ]),
+                    ),
                   ],
+                )
+              : const ChartScroll(),
+          Miniplayer(
+            minHeight: 50.0,
+            maxHeight: 50.0,
+            elevation: 1.5,
+            builder: ((height, percentage) {
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ListenSongScreen(),
+                  ),
                 ),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    buildTopImage(context, screenHeight, screenWidth),
-                    buildTopIcons(screenHeight, screenWidth),
-                    buildLatestListen(screenHeight, screenWidth),
-                    buildDiscovery(screenHeight, screenWidth),
-                    buildNewRelease(context, screenHeight, screenWidth),
-                    buildNotice(screenHeight, screenWidth),
-                    buildChart(screenHeight, screenWidth),
-                    buildPopular(screenHeight, screenWidth),
-                  ]),
+                child: Container(
+                  width: double.infinity,
+                  height: 50.0,
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 40.0,
+                            backgroundImage: AssetImage(
+                              'assets/images/songs/ben_tren_tang_lau.jpeg',
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Bên trên tầng lầu',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 5.0),
+                              Text(
+                                'Tăng Duy Tân',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12.0,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: screenWidth * 0.3,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(Icons.favorite,
+                                color: Colors.black, size: 20.0),
+                            Icon(
+                              Icons.play_arrow,
+                              color: Colors.black,
+                              size: 30.0,
+                            ),
+                            Icon(
+                              Icons.skip_next,
+                              color: Colors.black,
+                              size: 30.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            )
-          : const ChartScroll(),
+              );
+            }),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Theme.of(context).highlightColor,
         unselectedItemColor: Colors.grey,
