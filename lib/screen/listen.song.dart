@@ -1,7 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:music_app/model/song.model.dart';
 import 'package:music_app/widgets/info.banner.dart';
 import 'package:music_app/widgets/info.line.dart';
+import 'package:music_app/widgets/playing.btmbar.dart';
+import 'package:music_app/widgets/spinner.dart';
 
 class ListenSongScreen extends StatefulWidget {
   const ListenSongScreen({super.key});
@@ -12,6 +18,15 @@ class ListenSongScreen extends StatefulWidget {
 
 class ListenSongScreenState extends State<ListenSongScreen>
     with TickerProviderStateMixin {
+  int maxDuration = 100;
+  int currentPosition = 0;
+  String currentPlayingTime = "00:00";
+  String audioUrl = 'audios/ben_tren_tang_lau_tang_duy_tan.mp3';
+  bool isPlaying = false;
+  bool hasStarted = false;
+  late Uint8List audiobytes;
+  var player = AudioPlayer();
+
   final _gradientColor = const LinearGradient(
     colors: [
       Color.fromARGB(255, 129, 121, 121),
@@ -20,17 +35,53 @@ class ListenSongScreenState extends State<ListenSongScreen>
     ],
   );
   late TabController _tabController;
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
-    super.initState();
+    // 1. initialize for tab controller
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {
         _selectedIndex = _tabController.index;
       });
     });
+
+    Future.delayed(Duration.zero, () async {
+      ByteData bytes = await rootBundle.load(
+        "assets/$audioUrl",
+      ); //load audio from assets
+      audiobytes = bytes.buffer.asUint8List(
+        bytes.offsetInBytes,
+        bytes.lengthInBytes,
+      );
+
+      player.onDurationChanged.listen((Duration d) {
+        maxDuration = d.inMilliseconds;
+        setState(() {});
+      });
+
+      player.onPositionChanged.listen((Duration p) {
+        currentPosition = p.inMilliseconds;
+
+        int shours = Duration(milliseconds: currentPosition).inHours;
+        int sminutes = Duration(milliseconds: currentPosition).inMinutes;
+        int sseconds = Duration(milliseconds: currentPosition).inSeconds;
+
+        int rminutes = sminutes - (shours * 60);
+        int rseconds = sseconds - (sminutes * 60 + shours * 60 * 60);
+
+        String newMinutes = rminutes < 10 ? "0:$rminutes" : "$rminutes";
+        String newSeconds = rseconds < 10 ? "0:$rseconds" : "$rseconds";
+
+        currentPlayingTime = "$newMinutes:$newSeconds";
+
+        setState(() {
+          //refresh the UI
+        });
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -96,8 +147,21 @@ class ListenSongScreenState extends State<ListenSongScreen>
     );
   }
 
-  Widget _buildPlayingSongTab() {
-    return Container();
+  Widget _buildPlayingSongTab(double screenHeight) {
+    return Container(
+      height: screenHeight,
+      width: double.infinity,
+      child: Column(
+        children: [
+          Spinner(
+            imageUrl: 'assets/images/songs/ben_tren_tang_lau.jpeg',
+            song: 'Bên trên tầng lầu',
+            singer: 'Tăng Duy Tân',
+            isPlaying: isPlaying,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildSongLyricTab() {
@@ -107,6 +171,7 @@ class ListenSongScreenState extends State<ListenSongScreen>
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return DefaultTabController(
       initialIndex: 1,
@@ -153,15 +218,108 @@ class ListenSongScreenState extends State<ListenSongScreen>
               controller: _tabController,
               children: [
                 _buildSongInfoTab(screenWidth),
-                _buildPlayingSongTab(),
+                _buildPlayingSongTab(screenHeight),
                 _buildSongLyricTab(),
               ],
             ),
           ),
         ),
         bottomSheet: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           height: _selectedIndex == 1 ? 230.0 : 125.0,
           decoration: BoxDecoration(gradient: _gradientColor),
+          child: Column(
+            children: [
+              Expanded(
+                flex: _selectedIndex == 1 ? 1 : 3,
+                child: Slider(
+                  activeColor: Colors.white,
+                  inactiveColor: Colors.white54,
+                  thumbColor: Colors.white,
+                  value: double.parse(currentPosition.toString()),
+                  min: 0,
+                  max: double.parse(maxDuration.toString()),
+                  divisions: maxDuration,
+                  label: currentPlayingTime,
+                  onChanged: (double value) async {
+                    int seekVal = value.round();
+                    await player.seek(Duration(milliseconds: seekVal));
+                    setState(() {
+                      currentPosition = seekVal;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Icon(
+                      Icons.loop_outlined,
+                      size: 35.0,
+                      color: Colors.white70,
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.skip_previous,
+                        color: Colors.white,
+                        size: 35.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        if (!isPlaying && !hasStarted) {
+                          await player.play(AssetSource(audioUrl));
+                          setState(() {
+                            isPlaying = true;
+                            hasStarted = true;
+                          });
+                        } else if (!isPlaying && hasStarted) {
+                          await player.resume();
+                          setState(() {
+                            isPlaying = true;
+                            hasStarted = true;
+                          });
+                        } else {
+                          await player.pause();
+                          setState(() {
+                            isPlaying = false;
+                          });
+                        }
+                      },
+                      child: Icon(
+                        isPlaying == false
+                            ? Icons.play_circle_outline_rounded
+                            : Icons.pause_circle_outline_rounded,
+                        color: Colors.white,
+                        size: 60.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.skip_next,
+                        color: Colors.white,
+                        size: 35.0,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.loop_outlined,
+                      size: 35.0,
+                      color: Colors.white70,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child:
+                    _selectedIndex == 1 ? PlayingBtmBar() : SizedBox(width: 0),
+              ),
+            ],
+          ),
         ),
       ),
     );
