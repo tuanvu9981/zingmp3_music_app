@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:music_app/model/song.model.dart';
+import 'package:music_app/screen/test_lyric.dart';
 import 'package:music_app/widgets/info.banner.dart';
 import 'package:music_app/widgets/info.line.dart';
 import 'package:music_app/widgets/playing.btmbar.dart';
@@ -71,8 +72,8 @@ class ListenSongScreenState extends State<ListenSongScreen>
         int rminutes = sminutes - (shours * 60);
         int rseconds = sseconds - (sminutes * 60 + shours * 60 * 60);
 
-        String newMinutes = rminutes < 10 ? "0:$rminutes" : "$rminutes";
-        String newSeconds = rseconds < 10 ? "0:$rseconds" : "$rseconds";
+        String newMinutes = rminutes < 10 ? "0$rminutes" : "$rminutes";
+        String newSeconds = rseconds < 10 ? "0$rseconds" : "$rseconds";
 
         currentPlayingTime = "$newMinutes:$newSeconds";
 
@@ -165,7 +166,7 @@ class ListenSongScreenState extends State<ListenSongScreen>
   }
 
   Widget _buildSongLyricTab() {
-    return Container();
+    return TestLyric();
   }
 
   @override
@@ -232,28 +233,48 @@ class ListenSongScreenState extends State<ListenSongScreen>
           ),
           bottomSheet: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            height: _selectedIndex == 1 ? 230.0 : 125.0,
+            height: _selectedIndex == 1 ? 250.0 : 145.0,
             decoration: BoxDecoration(gradient: _gradientColor),
             child: Column(
               children: [
                 Expanded(
-                  flex: _selectedIndex == 1 ? 1 : 3,
-                  child: Slider(
-                    activeColor: Colors.white,
-                    inactiveColor: Colors.white54,
-                    thumbColor: Colors.white,
-                    value: double.parse(currentPosition.toString()),
-                    min: 0,
-                    max: double.parse(maxDuration.toString()),
-                    divisions: maxDuration,
-                    label: currentPlayingTime,
-                    onChanged: (double value) async {
-                      int seekVal = value.round();
-                      await player.seek(Duration(milliseconds: seekVal));
-                      setState(() {
-                        currentPosition = seekVal;
-                      });
-                    },
+                  flex: _selectedIndex == 1 ? 2 : 3,
+                  child: Column(
+                    children: [
+                      Slider(
+                        activeColor: Colors.white,
+                        inactiveColor: Colors.white54,
+                        thumbColor: Colors.white,
+                        value: double.parse(currentPosition.toString()),
+                        min: 0,
+                        max: double.parse(maxDuration.toString()),
+                        divisions: maxDuration,
+                        label: currentPlayingTime,
+                        onChanged: (double value) async {
+                          int seekVal = value.round();
+                          await player.seek(Duration(milliseconds: seekVal));
+                          setState(() {
+                            currentPosition = seekVal;
+                          });
+                        },
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              currentPlayingTime,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            const Text(
+                              "03:10",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Expanded(
@@ -320,10 +341,8 @@ class ListenSongScreenState extends State<ListenSongScreen>
                   ),
                 ),
                 Expanded(
-                  flex: 2,
-                  child: _selectedIndex == 1
-                      ? PlayingBtmBar()
-                      : SizedBox(width: 0),
+                  flex: _selectedIndex == 1 ? 2 : 0,
+                  child: _selectedIndex == 1 ? PlayingBtmBar() : SizedBox(),
                 ),
               ],
             ),

@@ -328,27 +328,12 @@ class HomeState extends State<Home> {
                     Colors.purple,
                     Colors.lightBlue,
                   ]).createShader(bounds),
-                  child: GestureDetector(
-                    onTap: () {
-                      if (_currentIndexSong == 2) {
-                        setState(() {
-                          _currentIndexSong = 0;
-                        });
-                        return;
-                      }
-                      if (_currentIndexSong < 2) {
-                        setState(() {
-                          _currentIndexSong += 1;
-                        });
-                      }
-                    },
-                    child: const Text(
-                      "#zingchart",
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: const Text(
+                    "#zingchart",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

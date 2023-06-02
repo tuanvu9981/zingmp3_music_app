@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class BannerInfo extends StatelessWidget {
-  String imageUrl;
-  String song;
-  String singer;
+  final String imageUrl;
+  final String song;
+  final String singer;
 
-  BannerInfo({
+  const BannerInfo({
     super.key,
     required this.imageUrl,
     required this.song,

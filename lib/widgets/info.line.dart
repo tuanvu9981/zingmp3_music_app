@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class InfoLine extends StatelessWidget {
-  String title;
-  String content;
-  InfoLine({super.key, required this.title, required this.content});
+  final String title;
+  final String content;
+  const InfoLine({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {

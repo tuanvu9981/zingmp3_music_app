@@ -5,9 +5,9 @@ class Spinner extends StatefulWidget {
   final String imageUrl;
   final String song;
   final String singer;
-  bool isPlaying;
+  final bool isPlaying;
 
-  Spinner({
+  const Spinner({
     super.key,
     required this.imageUrl,
     required this.song,
