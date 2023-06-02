@@ -64,3 +64,56 @@ CustomScrollView(
     - **await player.seek(Duration(milliseconds: 1200))**: Changes the current position (note: this does not affect the "playing" status).
     - **await player.stop()**: Stops the playback and also resets the current position.
 
+5. Playing lyric along with mp3 sound
+- **Reference**: [audio-player-example-flutter](https://github.com/ozyl/flutter_lyric/blob/master/example/lib/main.dart)
+- First, create a String lyric variables as below:
+```
+const normalLyrics = """[ti:Bên trên tầng lầu]
+[ar:Tăng Duy Tân]
+[al:Bên trên tầng lầu]
+[by:]
+[offset:0]
+[00:24.00]Em ơi đừng khóc bóng tối trước mắt sẽ bắt em đi
+
+[00:27.00]Em ơi đừng lo, em ơi đừng cho tương lai vụt tắt
+
+...
+"""
+
+```
+- Then, import String lyrics:
+```
+var lyricModel = LyricsModelBuilder.create()
+    .bindLyricToMain(normalLyrics)
+    .getModel();
+```
+
+- If you want to make translation lyrics, you'll need another String lyric with translated lyrics, and import those 2 as belows:
+```
+var lyricModel = LyricsModelBuilder.create()
+    .bindLyricToMain(normalLyrics)
+    .bindLyricToExt(transLyric)
+    .getModel();
+```
+
+- To make lyric run along, synchronous with mp3 sounding, just need to provide **boolean: isPlaying**, **int: position** and **lyricModel** as below
+
+```
+LyricsReader(
+    padding: EdgeInsets.symmetric(horizontal: lyricPadding),
+    model: lyricModel,
+    position: currentPosition,
+    lyricUi: lyricUI,
+    playing: isPlaying,
+    size: Size(
+        double.infinity,
+        MediaQuery.of(context).size.height * 0.9,
+    ),
+    emptyBuilder: () => Center(
+        child: Text(
+            "No lyrics",
+            style: lyricUI.getOtherMainTextStyle(),
+        ),
+    ),
+);
+```

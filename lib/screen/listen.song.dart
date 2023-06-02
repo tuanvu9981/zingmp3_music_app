@@ -188,7 +188,7 @@ class ListenSongScreenState extends State<ListenSongScreen>
             ),
             emptyBuilder: () => Center(
               child: Text(
-                "No lyrics",
+                "Không có lời cho bài hát này",
                 style: lyricUI.getOtherMainTextStyle(),
               ),
             ),
