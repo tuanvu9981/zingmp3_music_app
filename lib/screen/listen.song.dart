@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_lyric/lyrics_reader.dart';
+import 'package:music_app/lyrics/lyrics.dart';
 import 'package:music_app/model/song.model.dart';
 import 'package:music_app/screen/test_lyric.dart';
 import 'package:music_app/widgets/info.banner.dart';
@@ -27,6 +29,11 @@ class ListenSongScreenState extends State<ListenSongScreen>
   bool hasStarted = false;
   late Uint8List audiobytes;
   var player = AudioPlayer();
+  var lyricModel =
+      LyricsModelBuilder.create().bindLyricToMain(normalLyrics).getModel();
+
+  var lyricUI = UINetease(defaultSize: 22.0, otherMainSize: 19.0);
+  var lyricPadding = 10.0;
 
   final _gradientColor = const LinearGradient(
     colors: [
@@ -114,14 +121,14 @@ class ListenSongScreenState extends State<ListenSongScreen>
               color: const Color.fromARGB(255, 182, 174, 174),
               borderRadius: BorderRadius.circular(12.0),
             ),
-            child: Column(
+            child: const Column(
               children: [
                 BannerInfo(
                   imageUrl: 'assets/images/songs/ben_tren_tang_lau.jpeg',
                   song: 'Bên trên tầng lầu',
                   singer: 'Tăng Duy Tân',
                 ),
-                const Divider(height: 20, thickness: 0.5, color: Colors.white),
+                Divider(height: 20, thickness: 0.5, color: Colors.white),
                 InfoLine(title: 'Album', content: 'Vì sao em phải khóc'),
                 InfoLine(title: 'Nhạc sĩ', content: 'Tăng Duy Tân'),
                 InfoLine(title: 'Thể loại', content: 'Việt Nam, VPop'),
@@ -166,7 +173,30 @@ class ListenSongScreenState extends State<ListenSongScreen>
   }
 
   Widget _buildSongLyricTab() {
-    return TestLyric();
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LyricsReader(
+            padding: EdgeInsets.symmetric(horizontal: lyricPadding),
+            model: lyricModel,
+            position: currentPosition,
+            lyricUi: lyricUI,
+            playing: isPlaying,
+            size: Size(
+              double.infinity,
+              MediaQuery.of(context).size.height * 0.9,
+            ),
+            emptyBuilder: () => Center(
+              child: Text(
+                "No lyrics",
+                style: lyricUI.getOtherMainTextStyle(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

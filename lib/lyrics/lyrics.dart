@@ -37,11 +37,7 @@ const normalLyrics = """[ti:Bên trên tầng lầu]
 
 [01:11.24]Vì sao em phải khóc
 
-[01:13.00]
-
 [01:27.00]Vì sao em phải khóc
-
-[01:28.00]
 
 [01:46.00]Buông bàn tay để chấm hết
 
@@ -81,9 +77,5 @@ const normalLyrics = """[ti:Bên trên tầng lầu]
 
 [02:33.15]Vì sao em phải khóc
 
-[02:36.00]
-
 [02:50.29]Vì sao em phải khóc
-
-[02:52.00]
 """;
