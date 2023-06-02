@@ -44,6 +44,36 @@ class HomeState extends State<Home> {
   int _currentTab = 1;
   int _currentIndexSong = 0;
 
+  @override
+  void initState() {
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      activateChart();
+    });
+    super.initState();
+  }
+
+  void activateChart() {
+    switch (_currentIndexSong) {
+      case 0:
+        setState(() {
+          _currentIndexSong += 1;
+        });
+        break;
+      case 1:
+        setState(() {
+          _currentIndexSong += 1;
+        });
+        break;
+      case 2:
+        setState(() {
+          _currentIndexSong = 0;
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   Widget buildNotice(double scrH, double scrW) {
     return Container(
       width: scrW,
@@ -267,30 +297,6 @@ class HomeState extends State<Home> {
         ],
       ),
     );
-  }
-
-  Future<void> activateChart() async {
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      switch (_currentIndexSong) {
-        case 0:
-          setState(() {
-            _currentIndexSong += 1;
-          });
-          break;
-        case 1:
-          setState(() {
-            _currentIndexSong += 1;
-          });
-          break;
-        case 2:
-          setState(() {
-            _currentIndexSong = 0;
-          });
-          break;
-        default:
-          break;
-      }
-    });
   }
 
   Widget buildChart(double h, double w) {

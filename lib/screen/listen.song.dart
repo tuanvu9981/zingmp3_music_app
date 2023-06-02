@@ -173,152 +173,160 @@ class ListenSongScreenState extends State<ListenSongScreen>
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return DefaultTabController(
-      initialIndex: 1,
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          flexibleSpace: Container(
+    return Dismissible(
+      direction: DismissDirection.down,
+      key: const Key('listen'),
+      onDismissed: (DismissDirection direction) {
+        Navigator.pop(context);
+      },
+      child: DefaultTabController(
+        initialIndex: 1,
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(gradient: _gradientColor),
+            ),
+            title: Text(
+              getTitleByTabId(_selectedIndex),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 15.0,
+              ),
+            ),
+            centerTitle: true,
+            leading: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.white,
+                size: 30.0,
+              ),
+            ),
+            actions: const [
+              Icon(
+                Icons.more_vert,
+                color: Colors.white,
+                size: 30.0,
+              )
+            ],
+          ),
+          body: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15.0,
+                vertical: 22.5,
+              ),
+              decoration: BoxDecoration(gradient: _gradientColor),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildSongInfoTab(screenWidth),
+                  _buildPlayingSongTab(screenHeight),
+                  _buildSongLyricTab(),
+                ],
+              ),
+            ),
+          ),
+          bottomSheet: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            height: _selectedIndex == 1 ? 230.0 : 125.0,
             decoration: BoxDecoration(gradient: _gradientColor),
-          ),
-          title: Text(
-            getTitleByTabId(_selectedIndex),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 15.0,
-            ),
-          ),
-          centerTitle: true,
-          leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: const Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          ),
-          actions: const [
-            Icon(
-              Icons.more_vert,
-              color: Colors.white,
-              size: 30.0,
-            )
-          ],
-        ),
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15.0,
-              vertical: 22.5,
-            ),
-            decoration: BoxDecoration(gradient: _gradientColor),
-            child: TabBarView(
-              controller: _tabController,
+            child: Column(
               children: [
-                _buildSongInfoTab(screenWidth),
-                _buildPlayingSongTab(screenHeight),
-                _buildSongLyricTab(),
+                Expanded(
+                  flex: _selectedIndex == 1 ? 1 : 3,
+                  child: Slider(
+                    activeColor: Colors.white,
+                    inactiveColor: Colors.white54,
+                    thumbColor: Colors.white,
+                    value: double.parse(currentPosition.toString()),
+                    min: 0,
+                    max: double.parse(maxDuration.toString()),
+                    divisions: maxDuration,
+                    label: currentPlayingTime,
+                    onChanged: (double value) async {
+                      int seekVal = value.round();
+                      await player.seek(Duration(milliseconds: seekVal));
+                      setState(() {
+                        currentPosition = seekVal;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(
+                        Icons.loop_outlined,
+                        size: 35.0,
+                        color: Colors.white70,
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Icon(
+                          Icons.skip_previous,
+                          color: Colors.white,
+                          size: 35.0,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          if (!isPlaying && !hasStarted) {
+                            await player.play(AssetSource(audioUrl));
+                            setState(() {
+                              isPlaying = true;
+                              hasStarted = true;
+                            });
+                          } else if (!isPlaying && hasStarted) {
+                            await player.resume();
+                            setState(() {
+                              isPlaying = true;
+                              hasStarted = true;
+                            });
+                          } else {
+                            await player.pause();
+                            setState(() {
+                              isPlaying = false;
+                            });
+                          }
+                        },
+                        child: Icon(
+                          isPlaying == false
+                              ? Icons.play_circle_outline_rounded
+                              : Icons.pause_circle_outline_rounded,
+                          color: Colors.white,
+                          size: 60.0,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Icon(
+                          Icons.skip_next,
+                          color: Colors.white,
+                          size: 35.0,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.loop_outlined,
+                        size: 35.0,
+                        color: Colors.white70,
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: _selectedIndex == 1
+                      ? PlayingBtmBar()
+                      : SizedBox(width: 0),
+                ),
               ],
             ),
-          ),
-        ),
-        bottomSheet: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          height: _selectedIndex == 1 ? 230.0 : 125.0,
-          decoration: BoxDecoration(gradient: _gradientColor),
-          child: Column(
-            children: [
-              Expanded(
-                flex: _selectedIndex == 1 ? 1 : 3,
-                child: Slider(
-                  activeColor: Colors.white,
-                  inactiveColor: Colors.white54,
-                  thumbColor: Colors.white,
-                  value: double.parse(currentPosition.toString()),
-                  min: 0,
-                  max: double.parse(maxDuration.toString()),
-                  divisions: maxDuration,
-                  label: currentPlayingTime,
-                  onChanged: (double value) async {
-                    int seekVal = value.round();
-                    await player.seek(Duration(milliseconds: seekVal));
-                    setState(() {
-                      currentPosition = seekVal;
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(
-                      Icons.loop_outlined,
-                      size: 35.0,
-                      color: Colors.white70,
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.skip_previous,
-                        color: Colors.white,
-                        size: 35.0,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        if (!isPlaying && !hasStarted) {
-                          await player.play(AssetSource(audioUrl));
-                          setState(() {
-                            isPlaying = true;
-                            hasStarted = true;
-                          });
-                        } else if (!isPlaying && hasStarted) {
-                          await player.resume();
-                          setState(() {
-                            isPlaying = true;
-                            hasStarted = true;
-                          });
-                        } else {
-                          await player.pause();
-                          setState(() {
-                            isPlaying = false;
-                          });
-                        }
-                      },
-                      child: Icon(
-                        isPlaying == false
-                            ? Icons.play_circle_outline_rounded
-                            : Icons.pause_circle_outline_rounded,
-                        color: Colors.white,
-                        size: 60.0,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.skip_next,
-                        color: Colors.white,
-                        size: 35.0,
-                      ),
-                    ),
-                    const Icon(
-                      Icons.loop_outlined,
-                      size: 35.0,
-                      color: Colors.white70,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child:
-                    _selectedIndex == 1 ? PlayingBtmBar() : SizedBox(width: 0),
-              ),
-            ],
           ),
         ),
       ),
