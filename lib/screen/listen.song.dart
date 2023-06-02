@@ -1,16 +1,25 @@
-import 'dart:typed_data';
-
-import 'package:audioplayers/audioplayers.dart';
+// core lib
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart'; // ByteData
+
+// audio player
+import 'package:audioplayers/audioplayers.dart';
+
+// flutter lyric & constant lyric with time encoded
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:music_app/lyrics/lyrics.dart';
+
+// model
 import 'package:music_app/model/song.model.dart';
-import 'package:music_app/screen/test_lyric.dart';
+
+// custom widget
 import 'package:music_app/widgets/info.banner.dart';
 import 'package:music_app/widgets/info.line.dart';
 import 'package:music_app/widgets/playing.btmbar.dart';
 import 'package:music_app/widgets/spinner.dart';
+
+// util
+import 'package:music_app/utils/tab.dart';
 
 class ListenSongScreen extends StatefulWidget {
   const ListenSongScreen({super.key});
@@ -96,16 +105,6 @@ class ListenSongScreenState extends State<ListenSongScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  String getTitleByTabId(int tabId) {
-    if (tabId == 0) {
-      return 'Thông tin';
-    } else if (tabId == 1) {
-      return 'Bên trên tầng lầu';
-    } else {
-      return 'Lời bài hát';
-    }
   }
 
   Widget _buildSongInfoTab(double screenWidth) {
